@@ -75,8 +75,10 @@ async function extractStringToARB(args: any) {
 
 	try {
 		const translationKey = await writeToArb(key, text);
-		editor.edit(editBuilder => {
+		editor.edit(async editBuilder => {
 			editBuilder.replace(selection, `wrapL10n(transl.${translationKey})`);
+			editor.document.save();
+			await vscode.commands.executeCommand('flutter.hotReload');
 		});
 	} catch (error) {
 		console.error("unable to write to arb file", error);
